@@ -1,5 +1,6 @@
 package com.falabella.stepDefinitions;
 
+import com.falabella.questions.ValidationQuestion;
 import com.falabella.tasks.OpenUrlTask;
 import com.falabella.tasks.SearchProductsTask;
 import com.falabella.tasks.SelectProductTask;
@@ -32,6 +33,9 @@ public class FalabellaStepsDefinitions {
 
     @Then("they will validate that the products in the cart are the selected ones and the chosen quantities")
     public void theyWillValidateThatTheProductsInTheCartAreTheSelectedOnesAndTheChosenQuantities() {
+                theActorInTheSpotlight().attemptsTo(ValidationQuestion.module());
+
+
 
     }
 }

@@ -45,7 +45,7 @@ public class RandomInteraction implements Interaction {
                 }
                 actor.attemptsTo(
                         Click.on(BUTTON_ADDTOCART),
-                        Click.on(BUTTON_CART)
+                        Click.on(BUTTON_KEEPBUYING)
                 );
             }
         }
