@@ -14,6 +14,7 @@ import static com.falabella.utils.Excel.extractTo;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 
 public class FalabellaStepsDefinitions {
+    ArrayList<Map<String, String>> data = extractTo();
 
     @Given("the user is on the Falabella website")
     public void theUserIsOnTheFalabellaWebsite() {
@@ -32,7 +33,6 @@ public class FalabellaStepsDefinitions {
 
     @Then("they will validate that the products in the cart are the selected ones and the chosen quantities")
     public void theyWillValidateThatTheProductsInTheCartAreTheSelectedOnesAndTheChosenQuantities() {
-        ArrayList<Map<String, String>> data = extractTo();
         theActorInTheSpotlight().attemptsTo(ProductNameQuestion.withData(data));
         theActorInTheSpotlight().attemptsTo(QuantityQuestion.withData(data));
     }
