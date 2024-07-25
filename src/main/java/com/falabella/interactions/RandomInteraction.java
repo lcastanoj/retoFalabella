@@ -4,16 +4,23 @@ import net.serenitybdd.core.pages.WebElementFacade;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Interaction;
 import net.serenitybdd.screenplay.Performable;
+import net.serenitybdd.screenplay.actions.Clear;
 import net.serenitybdd.screenplay.actions.Click;
+import net.serenitybdd.screenplay.actions.Enter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static com.falabella.userInterfaces.SearchUI.*;
+import static com.falabella.utils.Excel.extractTo;
 import static com.falabella.utils.Excel.writeToExcel;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 public class RandomInteraction implements Interaction {
+    ArrayList<Map<String, String>> data = extractTo();
+
     @Override
     public <T extends Actor> void performAs(T actor) {
         for (int i = 0; i < 2; i++) {
@@ -25,25 +32,21 @@ public class RandomInteraction implements Interaction {
                 writeToExcel("src/test/resources/data/data.xlsx", product.getText(), 1, 2);
                 product.click();
 
-                for (int j = 0; j < 1; j++) {
-                    actor.attemptsTo(
-                            Click.on(BUTTON_ADDCANT),
-                            Click.on(BUTTON_ADDTOCART),
-                            Click.on(BUTTON_KEEPBUYING),
-                            GoBackInteraction.goBack()
-                    );
-                }
+                actor.attemptsTo(
+                        Clear.field(INPUT_ADDCANT),
+                        Enter.theValue(data.get(0).get("quantity_one")).into(INPUT_ADDCANT),
+                        Click.on(BUTTON_ADDTOCART),
+                        Click.on(BUTTON_KEEPBUYING),
+                        GoBackInteraction.goBack()
+                );
             } else {
                 WebElementFacade product = listProducts.get(index);
                 writeToExcel("src/test/resources/data/data.xlsx", product.getText(), 1, 3);
                 product.click();
 
-                for (int j = 0; j < 2; j++) {
-                    actor.attemptsTo(
-                            Click.on(BUTTON_ADDCANT)
-                    );
-                }
                 actor.attemptsTo(
+                        Clear.field(INPUT_ADDCANT),
+                        Enter.theValue(data.get(0).get("quantity_two")).into(INPUT_ADDCANT),
                         Click.on(BUTTON_ADDTOCART),
                         Click.on(BUTTON_KEEPBUYING)
                 );
