@@ -1,6 +1,7 @@
 package com.falabella.stepDefinitions;
 
 import com.falabella.questions.ProductNameQuestion;
+import com.falabella.questions.QuantityQuestion;
 import com.falabella.tasks.OpenUrlTask;
 import com.falabella.tasks.SearchProductsTask;
 import com.falabella.tasks.SelectProductTask;
@@ -33,5 +34,6 @@ public class FalabellaStepsDefinitions {
     public void theyWillValidateThatTheProductsInTheCartAreTheSelectedOnesAndTheChosenQuantities() {
         ArrayList<Map<String, String>> data = extractTo();
         theActorInTheSpotlight().attemptsTo(ProductNameQuestion.withData(data));
+        theActorInTheSpotlight().attemptsTo(QuantityQuestion.withData(data));
     }
 }
