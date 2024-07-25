@@ -16,13 +16,13 @@ import java.util.Map;
 public class Excel {
     public static ArrayList<Map<String, String>> readDataFromExcelSheet(String excelFilePath, String excelSheetName) throws IOException {
         ArrayList<Map<String, String>> dataList = new ArrayList<>();
-        Map<String, String> projectInformation = new HashMap<>();
+        Map<String, String> rowData = new HashMap<>();
         File file = new File(excelFilePath);
         FileInputStream inputStream = new FileInputStream(file);
-        XSSFWorkbook newWorkbook = new XSSFWorkbook(inputStream);
-        XSSFSheet newSheet = newWorkbook.getSheet(excelSheetName);
-        Iterator<Row> rowIterator = newSheet.iterator();
-        Row titlesRow = rowIterator.next();
+        XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+        XSSFSheet sheet = workbook.getSheet(excelSheetName);
+        Iterator<Row> rowIterator = sheet.iterator();
+        Row headers = rowIterator.next();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
             Iterator<Cell> cellIterator = row.cellIterator();
@@ -31,38 +31,24 @@ public class Excel {
                 cell.getColumnIndex();
                 switch (cell.getCellTypeEnum()) {
                     case STRING:
-                        projectInformation.put(titlesRow.getCell(cell.getColumnIndex()).toString(), cell.getStringCellValue());
+                        rowData.put(headers.getCell(cell.getColumnIndex()).toString(), cell.getStringCellValue());
                         break;
                     case NUMERIC:
-                        projectInformation.put(titlesRow.getCell(cell.getColumnIndex()).toString(), String.valueOf((long) cell.getNumericCellValue()));
+                        rowData.put(headers.getCell(cell.getColumnIndex()).toString(), String.valueOf((long) cell.getNumericCellValue()));
                         break;
                     case BLANK:
-                        projectInformation.put(titlesRow.getCell(cell.getColumnIndex()).toString(), "");
+                        rowData.put(headers.getCell(cell.getColumnIndex()).toString(), "");
                         break;
                     default:
                 }
             }
-            dataList.add(projectInformation);
-            projectInformation = new HashMap<>();
+            dataList.add(new HashMap<>(rowData));
+            rowData.clear();
         }
         return dataList;
     }
 
-    private static ArrayList<Map<String, String>> data = new ArrayList<>();
-
-    public static ArrayList<Map<String, String>> extractTo() {
-        try {
-            data = Excel.readDataFromExcelSheet("src/test/resources/data/data.xlsx", "Data");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return data;
-    }
-
     public static void writeToExcel(String path, String text, int row, int column) {
-        // Procesar el texto para eliminar la primera palabra y las dos últimas
-        String processedText = processText(text);
-
         Workbook workbook = null;
         try {
             workbook = WorkbookFactory.create(new FileInputStream(path));
@@ -79,7 +65,7 @@ public class Excel {
         if (cell == null) {
             cell = excelRow.createCell(column);
         }
-        cell.setCellValue(processedText);
+        cell.setCellValue(text);
         try (FileOutputStream outputStream = new FileOutputStream(path)) {
             workbook.write(outputStream);
         } catch (Exception e) {
@@ -87,18 +73,13 @@ public class Excel {
         }
     }
 
-    private static String processText(String text) {
-        String[] words = text.split("\\s+");
-        if (words.length <= 3) {
-            return "";
+    private static ArrayList<Map<String, String>> data = new ArrayList<>();
+    public static ArrayList<Map<String, String>> extractTo() {
+        try {
+            data = Excel.readDataFromExcelSheet("src/test/resources/data/data.xlsx", "Data");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        StringBuilder processedText = new StringBuilder();
-        for (int i = 1; i < words.length - 3; i++) {
-            if (i > 1) {
-                processedText.append(" ");
-            }
-            processedText.append(words[i]);
-        }
-        return processedText.toString();
+        return data;
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static com.falabella.userInterfaces.ProductDetailsUI.*;
 import static com.falabella.userInterfaces.SearchUI.*;
 import static com.falabella.utils.Excel.extractTo;
 import static com.falabella.utils.Excel.writeToExcel;
@@ -29,8 +30,9 @@ public class RandomInteraction implements Interaction {
 
             if (i == 0) {
                 WebElementFacade product = listProducts.get(index);
-                writeToExcel("src/test/resources/data/data.xlsx", product.getText(), 1, 2);
                 product.click();
+                String nameProduct = LBL_NAMEPRODUCT.resolveFor(actor).getText();
+                writeToExcel("src/test/resources/data/data.xlsx", nameProduct, 1, 2);
 
                 actor.attemptsTo(
                         Clear.field(INPUT_ADDCANT),
@@ -41,8 +43,9 @@ public class RandomInteraction implements Interaction {
                 );
             } else {
                 WebElementFacade product = listProducts.get(index);
-                writeToExcel("src/test/resources/data/data.xlsx", product.getText(), 1, 3);
                 product.click();
+                String nameProduct = LBL_NAMEPRODUCT.resolveFor(actor).getText();
+                writeToExcel("src/test/resources/data/data.xlsx", nameProduct, 1, 3);
 
                 actor.attemptsTo(
                         Clear.field(INPUT_ADDCANT),
